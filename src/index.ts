@@ -15,6 +15,8 @@ const createWindow = (): void => {
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
+    minWidth: 400,
+    minHeight: 400,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false, 
@@ -56,6 +58,15 @@ ipcMain.on('coordsChange', (event, latLng) => {
     "--",
     latLng.lat,
     latLng.lng,
+  ], (err: any, stdout: string, stderr: string) => {
+    console.log(stdout);
+    console.log(stderr);
+  });
+});
+
+ipcMain.on('reset', (event) => {
+  childProcess.execFile("idevicesetlocation", [
+    "reset"
   ], (err: any, stdout: string, stderr: string) => {
     console.log(stdout);
     console.log(stderr);
