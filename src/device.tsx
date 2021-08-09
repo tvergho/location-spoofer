@@ -17,7 +17,17 @@ const LocationChange = () => {
   const [error, setError] = useState('');
 
   const onPress = () => {
+    console.log('Test', parseFloat(lng) == NaN);
+    if (!lat || isNaN(parseFloat(lat)) || parseFloat(lat) < -90 || parseFloat(lat) > 90) {
+      setError('Latitude must be between -90 and 90 degrees.')
+      return;
+    }
+    else if (!lng || isNaN(parseFloat(lng)) || parseFloat(lng) < -180 || parseFloat(lng) > 180) {
+      setError('Longitude must be between -180 and 180 degrees.')
+      return;
+    }
     changeCoordinates(lat, lng);
+    setError('');
   }
 
   useEffect(() => {
