@@ -9,7 +9,9 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "keywords": [],
   "author": {
@@ -22,8 +24,8 @@
       "packagerConfig": {
         "osxSign": {
           "hardened-runtime": true,
-          "entitlements": "entitlements.plist",
-          "entitlements-inherit": "entitlements.plist",
+          "entitlements": "entitlements.mac.plist",
+          "entitlements-inherit": "entitlements.mac.plist",
           "signature-flags": "library",
           "gatekeeper-assess": false
         },
@@ -31,18 +33,15 @@
           "appleId": "tvergho@gmail.com",
           "appleIdPassword": "fbca-athz-zefu-ucht",
           "ascProvider": "KevinVergho1394596107"
-        }
+        },
+        "extraResource": [
+          "./libimobiledevice"
+        ]
       },
       "makers": [
         {
-          "name": "@electron-forge/maker-pkg",
-          "platforms": [
-            "darwin"
-          ],
-          "config": {
-            "scripts": "./scripts",
-            "identity": "3rd Party Mac Developer Installer: Kevin Vergho (A8566N6JEE)"
-          }
+          "name": "@electron-forge/maker-dmg",
+          "config": {}
         }
       ],
       "plugins": [
@@ -65,9 +64,29 @@
       ]
     }
   },
+  "build": {
+    "appId": "com.electron.location-spoofer",
+    "productName": "Location Spoofer",
+    "copyright": "Copyright © 2021 Tyler Vergho",
+    "mac": {
+      "target": "pkg",
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist"
+    },
+    "directories": {
+      "buildResources": "build"
+    },
+    "extraResources": [
+      "./libimobiledevice"
+    ],
+    "pkg": {
+
+    }
+  },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.59",
     "@electron-forge/maker-deb": "^6.0.0-beta.59",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.59",
     "@electron-forge/maker-pkg": "^6.0.0-beta.59",
     "@electron-forge/maker-rpm": "^6.0.0-beta.59",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.59",
@@ -80,6 +99,7 @@
     "@vercel/webpack-asset-relocator-loader": "1.6.0",
     "css-loader": "^6.0.0",
     "electron": "13.1.8",
+    "electron-builder": "^22.11.7",
     "eslint": "^7.2.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-plugin-import": "^2.22.1",
@@ -94,6 +114,7 @@
   },
   "dependencies": {
     "electron-log": "^4.4.1",
+    "electron-root-path": "^1.0.16",
     "electron-squirrel-startup": "^1.0.0",
     "fix-path": "^3.0.0",
     "react": "^17.0.2",
