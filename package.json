@@ -19,27 +19,30 @@
   "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "osxSign": {
+          "hardened-runtime": true,
+          "entitlements": "entitlements.plist",
+          "entitlements-inherit": "entitlements.plist",
+          "signature-flags": "library",
+          "gatekeeper-assess": false
+        },
+        "osxNotarize": {
+          "appleId": "tvergho@gmail.com",
+          "appleIdPassword": "fbca-athz-zefu-ucht",
+          "ascProvider": "KevinVergho1394596107"
+        }
+      },
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "location_spoofer"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
+          "name": "@electron-forge/maker-pkg",
           "platforms": [
             "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
+          ],
+          "config": {
+            "scripts": "./scripts",
+            "identity": "3rd Party Mac Developer Installer: Kevin Vergho (A8566N6JEE)"
+          }
         }
       ],
       "plugins": [
@@ -65,6 +68,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.59",
     "@electron-forge/maker-deb": "^6.0.0-beta.59",
+    "@electron-forge/maker-pkg": "^6.0.0-beta.59",
     "@electron-forge/maker-rpm": "^6.0.0-beta.59",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.59",
     "@electron-forge/maker-zip": "^6.0.0-beta.59",
@@ -89,11 +93,13 @@
     "typescript": "^4.0.2"
   },
   "dependencies": {
+    "electron-log": "^4.4.1",
     "electron-squirrel-startup": "^1.0.0",
+    "fix-path": "^3.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
-  "browser":{
+  "browser": {
     "child_process": false
   }
 }
