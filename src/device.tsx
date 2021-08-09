@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import * as ReactDOM from 'react-dom';
 import { ipcRenderer } from 'electron';
 
@@ -14,10 +14,19 @@ const reset = () => {
 const LocationChange = () => {
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
+  const [error, setError] = useState('');
 
   const onPress = () => {
     changeCoordinates(lat, lng);
   }
+
+  useEffect(() => {
+    ipcRenderer.on('output', (event, output) => {
+      if (output.includes('No device found')) {
+        setError('Device not connected.');
+      }
+    });
+  }, [])
 
   return (
     <div className="container">
@@ -35,6 +44,8 @@ const LocationChange = () => {
 
       <button type="button" className="submit" onClick={onPress}>Submit</button>
       <button type="button" className="reset" onClick={reset}>Reset Location</button>
+
+      <div className="error">{error}</div>
     </div>
   )
 }

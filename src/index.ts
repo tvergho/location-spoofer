@@ -59,6 +59,7 @@ ipcMain.on('coordsChange', (event, latLng) => {
     latLng.lat,
     latLng.lng,
   ], (err: any, stdout: string, stderr: string) => {
+    event.reply('output', stdout);
     console.log(stdout);
     console.log(stderr);
   });
