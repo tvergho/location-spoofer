@@ -11,13 +11,22 @@ const reset = () => {
   ipcRenderer.send('reset')
 }
 
+const getDevices = () => {
+  ipcRenderer.send('getDevices')
+}
+
+const checkImage = () => {
+  ipcRenderer.send('checkImage')
+}
+
 const LocationChange = () => {
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
+  const [devices, setDevices] = useState([]);
   const [error, setError] = useState('');
+  const [mounted, setMounted] = useState(false);
 
   const onPress = () => {
-    console.log('Test', parseFloat(lng) == NaN);
     if (!lat || isNaN(parseFloat(lat)) || parseFloat(lat) < -90 || parseFloat(lat) > 90) {
       setError('Latitude must be between -90 and 90 degrees.')
       return;
@@ -28,15 +37,33 @@ const LocationChange = () => {
     }
     changeCoordinates(lat, lng);
     setError('');
-  }
+  };
+
+  const refreshDevices = () => {
+    getDevices();
+    checkImage();
+  };
 
   useEffect(() => {
     ipcRenderer.on('output', (event, output) => {
       if (output.includes('No device found')) {
         setError('Device not connected.');
+      } else {
+        setError(output);
       }
     });
-  }, [])
+
+    ipcRenderer.on('deviceNames', (event, newDevices) => {
+      setDevices(newDevices);
+    });
+
+    ipcRenderer.on('imageMounted', (event, newMounted) => {
+      console.log(newMounted);
+      setMounted(newMounted);
+    });
+
+    refreshDevices();
+  }, []);
 
   return (
     <div className="container">
@@ -55,7 +82,15 @@ const LocationChange = () => {
       <button type="button" className="submit" onClick={onPress}>Submit</button>
       <button type="button" className="reset" onClick={reset}>Reset Location</button>
 
-      <div className="error">{error}</div>
+      <div className="error">{error || ' '}</div>
+
+      <h4 style={{color: mounted ? 'green' : 'red'}}>Devices {`(${devices.length})`}:</h4>
+      {devices.map((device: string) => {
+        return (
+          <p key={device} className="device">{device || ''}</p>
+        );
+      })}
+      <button type="button" className="refresh" onClick={refreshDevices}>refresh</button>
     </div>
   )
 }

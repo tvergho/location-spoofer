@@ -74,5 +74,25 @@ ipcMain.on('reset', (event) => {
   });
 });
 
+ipcMain.on('getDevices', (event) => {
+  childProcess.execFile("idevicename", [], (err: any, stdout: string, stderr: string) => {
+    if (stdout.includes('No device found') || stdout.length == 0) event.reply('deviceNames', []);
+    else event.reply('deviceNames', stdout.split(','));
+
+    console.log(stdout);
+    console.log(stderr);
+  });
+});
+
+ipcMain.on('checkImage', (event) => {
+  childProcess.execFile("ideviceimagemounter", ['-l'], (err: any, stdout: string, stderr: string) => {
+    if (stdout.includes('No device found')) event.reply('imageMounted', false);
+    else event.reply('imageMounted', true);
+
+    console.log(stdout);
+    console.log(stderr);
+  });
+});
+
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

@@ -1,8 +1,8 @@
 {
   "name": "location-spoofer",
-  "productName": "location-spoofer",
+  "productName": "Location Spoofer",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "App to spoof an iPhone's location.",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",

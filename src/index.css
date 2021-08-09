@@ -19,7 +19,7 @@ h1 {
   width: 100vw;
   align-items: center;
   justify-content: flex-start;
-  margin-top: 25vh;
+  margin-top: 15vh;
 }
 
 .submit {
@@ -30,7 +30,7 @@ h1 {
   border: 2px solid royalblue;
 }
 
-.submit, .reset {
+.submit, .reset, .refresh {
   transition: opacity 0.3s;
   opacity: 1;
   outline: 0;
@@ -39,11 +39,11 @@ h1 {
   cursor: pointer;
 }
 
-.submit:hover, .reset:hover {
+.submit:hover, .reset:hover, .refresh:hover {
   opacity: 0.7;
 }
 
-.submit:active, .reset:active {
+.submit:active, .reset:active, .refresh:active {
   opacity: 0.5;
 }
 
@@ -72,4 +72,18 @@ h1 {
   color: red;
   margin-top: 20px;
   text-align: center;
+  margin-bottom: 20px;
+}
+
+.refresh {
+  color: rgba(0,0,0,0.6);
+  margin-top: 10px;
+}
+
+h4 {
+  margin: 0;
+}
+
+.device {
+  margin: 10px 0;
 }
