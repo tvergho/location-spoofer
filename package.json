@@ -69,13 +69,19 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.59",
     "@electron-forge/maker-zip": "^6.0.0-beta.59",
     "@electron-forge/plugin-webpack": "6.0.0-beta.59",
+    "@types/react": "^17.0.16",
+    "@types/react-dom": "^17.0.9",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "@vercel/webpack-asset-relocator-loader": "1.6.0",
     "css-loader": "^6.0.0",
     "electron": "13.1.8",
-    "eslint": "^7.6.0",
-    "eslint-plugin-import": "^2.20.0",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^1.7.0",
     "fork-ts-checker-webpack-plugin": "^6.0.1",
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",
@@ -83,6 +89,11 @@
     "typescript": "^4.0.2"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "browser":{
+    "child_process": false
   }
 }
