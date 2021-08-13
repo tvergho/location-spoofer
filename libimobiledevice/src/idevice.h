@@ -26,15 +26,11 @@
 #include <config.h>
 #endif
 
-#if defined(HAVE_OPENSSL)
+#ifdef HAVE_OPENSSL
 #include <openssl/ssl.h>
-#elif defined(HAVE_GNUTLS)
+#else
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
-#elif defined(HAVE_MBEDTLS)
-#include <mbedtls/ssl.h>
-#include <mbedtls/entropy.h>
-#include <mbedtls/ctr_drbg.h>
 #endif
 
 #ifdef WIN32
@@ -52,31 +48,17 @@
 
 #define DEVICE_VERSION(maj, min, patch) (((maj & 0xFF) << 16) | ((min & 0xFF) << 8) | (patch & 0xFF))
 
-#define DEVICE_CLASS_IPHONE  1
-#define DEVICE_CLASS_IPAD    2
-#define DEVICE_CLASS_IPOD    3
-#define DEVICE_CLASS_APPLETV 4
-#define DEVICE_CLASS_WATCH   5
-#define DEVICE_CLASS_UNKNOWN 255
-
 struct ssl_data_private {
-#if defined(HAVE_OPENSSL)
+#ifdef HAVE_OPENSSL
 	SSL *session;
 	SSL_CTX *ctx;
-#elif defined(HAVE_GNUTLS)
+#else
 	gnutls_certificate_credentials_t certificate;
 	gnutls_session_t session;
 	gnutls_x509_privkey_t root_privkey;
 	gnutls_x509_crt_t root_cert;
 	gnutls_x509_privkey_t host_privkey;
 	gnutls_x509_crt_t host_cert;
-#elif defined(HAVE_MBEDTLS)
-	mbedtls_ssl_context ctx;
-	mbedtls_ssl_config config;
-	mbedtls_entropy_context entropy;
-	mbedtls_ctr_drbg_context ctr_drbg;
-	mbedtls_x509_crt certificate;
-	mbedtls_pk_context root_privkey;
 #endif
 };
 typedef struct ssl_data_private *ssl_data_t;
@@ -86,8 +68,6 @@ struct idevice_connection_private {
 	enum idevice_connection_type type;
 	void *data;
 	ssl_data_t ssl_data;
-	unsigned int ssl_recv_timeout;
-	idevice_error_t status;
 };
 
 struct idevice_private {
@@ -96,7 +76,6 @@ struct idevice_private {
 	enum idevice_connection_type conn_type;
 	void *conn_data;
 	int version;
-	int device_class;
 };
 
 #endif

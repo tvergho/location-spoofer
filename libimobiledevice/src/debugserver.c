@@ -80,10 +80,7 @@ LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_new(idevice_t device
 		debug_info("Creating base service client failed. Error: %i", ret);
 		return ret;
 	}
-
-	if (service->identifier && (strcmp(service->identifier, DEBUGSERVER_SECURE_SERVICE_NAME) != 0)) {
-		service_disable_bypass_ssl(parent, 1);
-	}
+	service_disable_bypass_ssl(parent, 1);
 
 	debugserver_client_t client_loc = (debugserver_client_t) malloc(sizeof(struct debugserver_client_private));
 	client_loc->parent = parent;
@@ -98,11 +95,7 @@ LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_new(idevice_t device
 LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_start_service(idevice_t device, debugserver_client_t * client, const char* label)
 {
 	debugserver_error_t err = DEBUGSERVER_E_UNKNOWN_ERROR;
-	service_client_factory_start_service(device, DEBUGSERVER_SECURE_SERVICE_NAME, (void**)client, label, SERVICE_CONSTRUCTOR(debugserver_client_new), &err);
-	if (err != DEBUGSERVER_E_SUCCESS) {
-		err = DEBUGSERVER_E_UNKNOWN_ERROR;
-		service_client_factory_start_service(device, DEBUGSERVER_SERVICE_NAME, (void**)client, label, SERVICE_CONSTRUCTOR(debugserver_client_new), &err);
-	}
+	service_client_factory_start_service(device, DEBUGSERVER_SERVICE_NAME, (void**)client, label, SERVICE_CONSTRUCTOR(debugserver_client_new), &err);
 	return err;
 }
 
@@ -156,7 +149,7 @@ LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_receive_with_timeout
 		*received = (uint32_t)bytes;
 	}
 
-	return (bytes > 0) ? DEBUGSERVER_E_SUCCESS : res;
+	return res;
 }
 
 LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_receive(debugserver_client_t client, char* data, uint32_t size, uint32_t *received)

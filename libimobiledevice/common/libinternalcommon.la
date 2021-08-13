@@ -17,7 +17,7 @@ old_library='libinternalcommon.a'
 inherited_linker_flags=' '
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/usr/local/Cellar/libusbmuxd/HEAD-e32bf76/lib -lusbmuxd-2.0 -L/usr/local/Cellar/libplist/HEAD-feb0bcd/lib -lplist-2.0 -L/usr/local/Cellar/openssl@1.1/1.1.1k/lib -lssl -lcrypto -L/usr/local/opt/openssl@1.1/lib'
+dependency_libs=' -L/usr/local/Cellar/libusbmuxd/HEAD-e32bf76/lib -lusbmuxd-2.0 -L/usr/local/Cellar/libplist/HEAD-feb0bcd/lib -lplist-2.0 -L/usr/local/opt/openssl@1.1/lib'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''

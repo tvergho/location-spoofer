@@ -27,7 +27,13 @@
           "entitlements": "entitlements.mac.plist",
           "entitlements-inherit": "entitlements.mac.plist",
           "signature-flags": "library",
-          "gatekeeper-assess": false
+          "gatekeeper-assess": false,
+          "binaries": [
+            "./libimobiledevice/libcrypto.1.1.dylib",
+            "./libimobildevice/libplist-2.0.3.dylib",
+            "./libimobiledevice/libssl.1.1.dylib",
+            "./libimobiledevice/libusbmuxd-2.0.6.dylib"
+          ]
         },
         "osxNotarize": {
           "appleId": "tvergho@gmail.com",

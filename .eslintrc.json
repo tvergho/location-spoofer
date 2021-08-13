@@ -85,6 +85,7 @@
     "import/prefer-default-export": 0,
     "import/no-cycle": 0,
     "camelcase": 0,
-    "global-require": 0
+    "global-require": 0,
+    "@typescript-eslint/no-var-requires": 0
   }
 }

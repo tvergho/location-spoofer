@@ -32,8 +32,9 @@ struct lockdownd_client_private {
 	property_list_service_client_t parent;
 	int ssl_enabled;
 	char *session_id;
+	char *udid;
 	char *label;
-	idevice_t device;
+	uint32_t mux_id;
 };
 
 #endif
