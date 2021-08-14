@@ -1,6 +1,6 @@
 {
   "name": "location-spoofer",
-  "productName": "Location Spoofer",
+  "productName": "LocationSpoofer",
   "version": "1.0.0",
   "description": "App to spoof an iPhone's location.",
   "main": ".webpack/main",
@@ -27,22 +27,13 @@
           "entitlements": "entitlements.mac.plist",
           "entitlements-inherit": "entitlements.mac.plist",
           "signature-flags": "library",
-          "gatekeeper-assess": false,
-          "binaries": [
-            "./libimobiledevice/libcrypto.1.1.dylib",
-            "./libimobildevice/libplist-2.0.3.dylib",
-            "./libimobiledevice/libssl.1.1.dylib",
-            "./libimobiledevice/libusbmuxd-2.0.6.dylib"
-          ]
+          "gatekeeper-assess": false
         },
         "osxNotarize": {
           "appleId": "tvergho@gmail.com",
           "appleIdPassword": "fbca-athz-zefu-ucht",
           "ascProvider": "KevinVergho1394596107"
-        },
-        "extraResource": [
-          "./libimobiledevice"
-        ]
+        }
       },
       "makers": [
         {
@@ -72,7 +63,7 @@
   },
   "build": {
     "appId": "com.electron.location-spoofer",
-    "productName": "Location Spoofer",
+    "productName": "LocationSpoofer",
     "copyright": "Copyright © 2021 Tyler Vergho",
     "mac": {
       "target": "dmg",
@@ -130,7 +121,8 @@
     "electron-squirrel-startup": "^1.0.0",
     "fix-path": "^3.0.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "sudo-prompt": "^9.2.1"
   },
   "browser": {
     "child_process": false

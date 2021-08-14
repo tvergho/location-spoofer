@@ -1,58 +1,85 @@
 const {ipcMain} = require('electron');
 const log = require('electron-log');
 const childProcess = require('child_process');
+const util = require('util');
+const path = require('path');
+const install = require('./install').default;
+const exec = util.promisify(childProcess.exec);
+const execFile = util.promisify(childProcess.execFile);
 
-const logHelper = (funcName: string, err: any, stdout: string, stderr: string) => {
-  if (err) log.error(`${funcName} error: `, err);
+const prefix = process.env.NODE_ENV === 'production' ? `${process.resourcesPath}/homebrew/bin` : path.join(__dirname, '..', 'homebrew2/bin');
+
+const logHelper = (funcName: string, stdout: string, stderr: string) => {
   log.info(`${funcName} output: `, stdout);
   if (stderr) log.info(`${funcName} error output: `, stderr);
 };
 
-ipcMain.on('coordsChange', (event, latLng) => {
-  childProcess.execFile(`idevicesetlocation`, [
-    '--',
-    latLng.lat,
-    latLng.lng,
-  ], (err: any, stdout: string, stderr: string) => {
-    logHelper('Set location', err, stdout, stderr);
-
+ipcMain.on('coordsChange', async (event, latLng) => {
+  try {
+    const { stdout, stderr } = await execFile(`${prefix}/idevicesetlocation`, [
+      '--',
+      latLng.lat,
+      latLng.lng,
+    ]);
+    logHelper('Set location', stdout, stderr);
     event.reply('output', stdout);
     console.log(stdout);
     console.log(stderr);
-  });
+  } catch (e) {
+    console.log(e);
+    log.error(e);
+  }
 });
 
-ipcMain.on('reset', (event) => {
-  childProcess.execFile(`idevicesetlocation`, [
-    'reset',
-  ], (err: any, stdout: string, stderr: string) => {
-    logHelper('Reset', err, stdout, stderr);
-
+ipcMain.on('reset', async (event) => {
+  try {
+    const { stdout, stderr } = await execFile(`${prefix}/idevicesetlocation`, ['reset']);
+    logHelper('Reset', stdout, stderr);
     console.log(stdout);
     console.log(stderr);
-  });
+  } catch (e) {
+    console.log(e);
+    log.error(e);
+  }
 });
 
-ipcMain.on('getDevices', (event) => {
-  childProcess.execFile(`idevicename`, [], (err: any, stdout: string, stderr: string) => {
-    logHelper('Get devices', err, stdout, stderr);
+ipcMain.on('getDevices', async (event) => {
+  try {
+    const { stdout, stderr } = await execFile(`${prefix}/idevicename`, []);
+    logHelper('Get devices', stdout, stderr);
 
     if (stdout.includes('No device found') || stdout.length === 0) event.reply('deviceNames', []);
     else event.reply('deviceNames', stdout.split(','));
 
     console.log(stdout);
     console.log(stderr);
-  });
+  } catch (e) {
+    event.reply('deviceNames', []);
+    console.log(e);
+    log.error(e);
+  }
 });
 
-ipcMain.on('checkImage', (event) => {
-  childProcess.execFile(`ideviceimagemounter`, ['-l'], (err: any, stdout: string, stderr: string) => {
-    logHelper('Check image mounted', err, stdout, stderr);
+ipcMain.on('checkImage', async (event) => {
+  try {
+    const { stdout, stderr } = await execFile(`${prefix}/ideviceimagemounter`, ['-l']);
+    logHelper('Check image mounted', stdout, stderr);
 
-    if (stdout.includes('No device found')) event.reply('imageMounted', false);
-    else event.reply('imageMounted', true);
+    if (stdout.includes('ImageSignature')) event.reply('imageMounted', true);
+    else event.reply('imageMounted', false);
+  } catch (e) {
+    event.reply('imageMounted', false);
+    console.log(e);
+    log.error(e);
+  }
+});
 
-    console.log(stdout);
-    console.log(stderr);
-  });
+ipcMain.on('checkInstall', async (event) => {
+  try {
+    await install();
+    event.reply('installed', true);
+  } catch (e) {
+    console.log(e);
+    log.error(e);
+  }
 });
