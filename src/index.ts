@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { app, BrowserWindow, ipcMain } from 'electron';
-
 const fixPath = require('fix-path');
 
 fixPath();
@@ -62,60 +61,4 @@ app.on('activate', () => {
   }
 });
 
-const logHelper = (funcName: string, err: any, stdout: string, stderr: string) => {
-  if (err) log.error(`${funcName} error: `, err);
-  log.info(`${funcName} output: `, stdout);
-  if (stderr) log.info(`${funcName} error output: `, stderr);
-};
-
-ipcMain.on('coordsChange', (event, latLng) => {
-  childProcess.execFile(`${prefix}/idevicesetlocation`, [
-    '--',
-    latLng.lat,
-    latLng.lng,
-  ], (err: any, stdout: string, stderr: string) => {
-    logHelper('Set location', err, stdout, stderr);
-
-    event.reply('output', stdout);
-    console.log(stdout);
-    console.log(stderr);
-  });
-});
-
-ipcMain.on('reset', (event) => {
-  childProcess.execFile(`${prefix}/idevicesetlocation`, [
-    'reset',
-  ], (err: any, stdout: string, stderr: string) => {
-    logHelper('Reset', err, stdout, stderr);
-
-    console.log(stdout);
-    console.log(stderr);
-  });
-});
-
-ipcMain.on('getDevices', (event) => {
-  childProcess.execFile(`${prefix}/idevicename`, [], (err: any, stdout: string, stderr: string) => {
-    logHelper('Get devices', err, stdout, stderr);
-
-    if (stdout.includes('No device found') || stdout.length === 0) event.reply('deviceNames', []);
-    else event.reply('deviceNames', stdout.split(','));
-
-    console.log(stdout);
-    console.log(stderr);
-  });
-});
-
-ipcMain.on('checkImage', (event) => {
-  childProcess.execFile(`${prefix}/ideviceimagemounter`, ['-l'], (err: any, stdout: string, stderr: string) => {
-    logHelper('Check image mounted', err, stdout, stderr);
-
-    if (stdout.includes('No device found')) event.reply('imageMounted', false);
-    else event.reply('imageMounted', true);
-
-    console.log(stdout);
-    console.log(stderr);
-  });
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+require('./events');

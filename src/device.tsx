@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
-import * as ReactDOM from 'react-dom';
 import { ipcRenderer } from 'electron';
 
 const changeCoordinates = (lat: string, lng: string) => {
@@ -94,12 +93,4 @@ const LocationChange = () => {
   );
 };
 
-function render() {
-  ReactDOM.render(
-    (
-      <LocationChange />
-    ), document.body,
-  );
-}
-
-render();
+export default LocationChange;
