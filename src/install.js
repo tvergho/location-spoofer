@@ -65,4 +65,3 @@ const main = async () => {
 }
 
 exports.default = main;
-main();
