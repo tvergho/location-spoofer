@@ -8,6 +8,7 @@ const exec = util.promisify(childProcess.exec);
 const execFile = util.promisify(childProcess.execFile);
 
 const prefix = process.env.NODE_ENV === 'production' ? `${process.resourcesPath}/homebrew/bin` : path.join(__dirname, '..', 'homebrew2/bin');
+let installRunning = false;
 
 const logHelper = (funcName: string, stdout: string, stderr: string) => {
   log.info(`${funcName} output: `, stdout);
@@ -76,9 +77,15 @@ ipcMain.on('checkImage', async (event) => {
 
 ipcMain.on('checkInstall', async (event) => {
   try {
-    await install();
+    if (!installRunning) {
+      await install();
+      installRunning = true;
+    }
     event.reply('installed', true);
+    installRunning = false;
   } catch (e) {
+    installRunning = false;
+    event.reply('installFailed', true);
     console.log(e);
     log.error(e);
   }

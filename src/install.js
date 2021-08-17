@@ -7,13 +7,15 @@ const sudoPrompt = require('sudo-prompt');
 const exec = util.promisify(childProcess.exec);
 const sudoExec = util.promisify(sudoPrompt.exec);
 
-const prefix = process.env.NODE_ENV === 'production' ? `${process.resourcesPath}/homebrew`.split(/\ /).join('\ ') : path.join(__dirname, '..', 'homebrew2').split(/\ /).join('\ ');;
+const prefix = process.env.NODE_ENV === 'production' 
+  ? `${process.resourcesPath}/homebrew`.split(/\ /).join('\ ') 
+  : path.join(__dirname, '..', 'homebrew2').split(/\ /).join('\ ');;
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const installLib = (resolve) => {
+const installLib = (resolve, reject) => {
   const install = childProcess.spawn('bash', [`${prefix}/bin/brew`, 'install', 'libimobiledevice']);
   install.stdout.on('data', (data) => {
     log.info(`stdout: ${data}`);
@@ -26,11 +28,12 @@ const installLib = (resolve) => {
   install.on('close', (code) => {
     console.log(`Installation of libimobiledevice exited with code ${code}`);
     log.info(`Installation of libimobiledevice exited with code ${code}`);
-    resolve();
+    if (code == 0) resolve();
+    else reject();
   });
 }
 
-const installSsl = (resolve) => {
+const installSsl = (resolve, reject) => {
   const sslInstall = childProcess.spawn('bash', [`${prefix}/bin/brew`, 'install', 'openssl@1.1', '--force-bottle']);
   sslInstall.stdout.on('data', (data) => {
     log.info(`stdout: ${data}`);
@@ -52,7 +55,8 @@ const installSsl = (resolve) => {
   sslInstall.on('close', (code) => {
     console.log(`Installation of openssl exited with code ${code}`);
     log.info(`Installation of openssl exited with code ${code}`);
-    installLib(resolve);
+    if (code != 0) reject();
+    else installLib(resolve, reject);
   });
 }
 
@@ -94,7 +98,7 @@ const main = async () => {
     return new Promise((resolve, reject) => {
       console.log(`Spawning ${prefix}/bin/brew`);
       log.info(`Spawning ${prefix}/bin/brew`);
-      installSsl(resolve);
+      installSsl(resolve, reject);
     });
   }
 }

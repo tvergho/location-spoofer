@@ -25,6 +25,11 @@ const Main = () => {
         setIsLoading(false);
       }
     });
+    ipcRenderer.on('installFailed', (event, installFailed) => {
+      if (installFailed) {
+        ipcRenderer.send('checkInstall');
+      }
+    });
   }, []);
 
   return (
